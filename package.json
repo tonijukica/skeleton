@@ -16,6 +16,8 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@material-ui/core": "^4.9.10",
+    "@material-ui/icons": "^4.9.1",
     "babel-polyfill": "^6.26.0",
     "cookie-parser": "^1.4.5",
     "cookie-session": "^1.4.0",
@@ -29,7 +31,8 @@
     "react-router-dom": "^5.1.2",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
-    "sequelize": "^5.21.6"
+    "sequelize": "^5.21.6",
+    "typeface-roboto": "0.0.75"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
