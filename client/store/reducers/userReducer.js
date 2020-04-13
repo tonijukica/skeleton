@@ -4,7 +4,8 @@ export const userInitialState = {
   username: null,
   loggedIn: false,
   isLoading: false,
-  error: false
+  error: false,
+  errorMsg: ''
 }
 
 export const userReducer = (state = userInitialState, action) => {
@@ -28,6 +29,18 @@ export const userReducer = (state = userInitialState, action) => {
       return {
         ...state,
         isLoading: true
+      }
+    case(actionTypes.SET_ERROR):
+      return {
+        ...state,
+        error: true,
+        errorMsg: action.payload
+      }
+    case(actionTypes.CLEAR_ERROR):
+      return {
+        ...state,
+        error: false,
+        errorMsg: ''
       }
     default:
       return state;

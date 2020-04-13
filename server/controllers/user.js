@@ -5,67 +5,65 @@ const { hashPassword } = require('../common/helpers');
 
 router.use('/register', async(req, res) => {
   const { username, email, password } = req.body;
-  if(!username && !email && password){
-    res.status(400).send('Missing required params');
-  }
+  if(!username && !email && password)
+    return res.status(400).send('Missing required params');
+
   const user = await User.findOne({
     where: {
       username
     }
   });
-  if(user){
-    res.status(400).send('Username already exists');
-
-  }
-  else {
-    const newUser = await User.create({
-      username,
-      email,
-      passwordHash: await hashPassword(password)
-    });
-    res.json(newUser);
-  }
+  if(user)
+    return res.status(400).send('Username already exists');
+  
+  const newUser = await User.create({
+    username,
+    email,
+    passwordHash: await hashPassword(password)
+  });
+  return res.json(newUser);
 });
 
 router.use('/login', async(req, res) => {
   const { username, password } = req.body;
-  if(!username && password){
-    res.status(400).send('Missing required params');
-  }
+  if(!username && password)
+    return res.status(400).send('Missing required params');
+  
   const user = await User.findOne({
     where: {
       username
     }
   });
-  if(!user){
-    res.status(400).send('User does not exits');
+  if(!user)
+    return res.status(400).send('User does not exits');
+
+  const passwordHash = await hashPassword(password);
+  if(user.passwordHash === passwordHash){
+    req.session.user = {
+      id: user.id,
+      username: user.username
+    };
+    return res.json({
+      status: 'Login success',
+      userId: user.id
+    });
   }
-  else{
-    const passwordHash = await hashPassword(password);
-    if(user.passwordHash === passwordHash){
-      req.session.user = {
-        id: user.id,
-        username: user.username
-      };
-      res.send('Login success');
-    }
-    else{
-      res.status(400).send('Incorrect username or password');
-    }
-  }
+  else
+    return res.status(400).send('Incorrect username or password');
+  
 });
 router.use('/profile', async(req, res) => {
   if(!req.session.user)
-    res.status(400).send('Denied');
-  else{
-    const { id } = req.session.user;
-    const user = await User.findOne({
-      where: {
-        id
-      }
-    });
-    res.json(user);
-  }
+    return res.status(400).send('Denied');
+
+  const { id } = req.session.user;
+  const user = await User.findOne({
+    where: {
+      id
+    }
+  });
+  return res.json(user);
+
 })
 
 module.exports = router;

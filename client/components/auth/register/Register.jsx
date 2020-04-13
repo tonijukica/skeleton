@@ -1,5 +1,8 @@
+import { useState } from 'react';
 import { Container, Paper, Avatar, TextField, Button, Typography, makeStyles } from '@material-ui/core';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
+import { useDispatch, useSelector } from 'react-redux';
+import { registerUser } from '../../../store/actions/userActions';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -20,10 +23,21 @@ const useStyles = makeStyles((theme) => ({
 
 const Register = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { error, errorMsg } = useSelector(state => state.user);
 
   return(
     <Container maxWidth='sm'>
-      <Paper variant='elevated' elevation={3} className={classes.paper}>
+      {
+        error &&
+        <Paper variant='elevation' elevation={3} className={classes.paper} style={{backgroundColor: '#FF9494'}}>
+        {errorMsg}
+        </Paper>
+      }
+      <Paper variant='elevation' elevation={3} className={classes.paper}>
         <Avatar className={classes.avatar}>
           <VpnKeyIcon/>
         </Avatar>
@@ -37,6 +51,7 @@ const Register = () => {
             id="username"
             label="Username"
             name="username"
+            onChange={(e) => setUsername(e.target.value)}
           />
         <TextField
             variant="outlined"
@@ -45,6 +60,7 @@ const Register = () => {
             name="email"
             label="Email"
             id="email"
+            onChange={(e) => setEmail(e.target.value)}
           />
         <TextField
             variant="outlined"
@@ -54,12 +70,21 @@ const Register = () => {
             label="Password"
             type="password"
             id="password"
+            onChange={(e) => setPassword(e.target.value)}
           />
         <Button
           fullWidth
           variant='contained'
           color='primary'
           className={classes.submit}
+          disabled={!username || !email || !password}
+          onClick={() => {
+            dispatch(registerUser({
+              username,
+              email,
+              password
+            }))
+          }}
         >
           Register
         </Button>

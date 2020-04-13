@@ -13,7 +13,7 @@ module.exports = {
   },
   devServer: {
     proxy: {
-      '^/api': {
+      '/api': {
         target: serverUrl,
         ws: true,
         changeOrigin: true
