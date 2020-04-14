@@ -20,6 +20,10 @@ const setLoading = () => {
   return dispatch => dispatch({ type: actionTypes.LOADING_USER });
 }
 
+const clearError = () => {
+  return dispatch => dispatch({ type: actionTypes.CLEAR_ERROR });
+}
+
 const registerUser = (user) => {
 
   return dispatch => {
@@ -54,11 +58,16 @@ const loginUser = (user) => {
     })
   }
 }
+const logoutUser = () => {
+  return dispatch => dispatch({ type: actionTypes.REMOVE_USER });
+}
 
 export {
   actionTypes,
   setUser,
   removeUser,
   registerUser,
-  loginUser
+  loginUser,
+  logoutUser,
+  clearError
 }

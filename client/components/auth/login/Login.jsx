@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Container, Paper, Avatar, TextField, Button, Typography, makeStyles } from '@material-ui/core';
 import LockIcon from '@material-ui/icons/LockOutlined';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginUser } from '../../../store/actions/userActions';
+import { loginUser, clearError } from '../../../store/actions/userActions';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -28,9 +28,18 @@ const Login = () => {
   const dispatch = useDispatch();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const { error, errorMsg } = useSelector(state => state.user);
+  const { loggedIn, error, errorMsg, isLoading } = useSelector(state => state.user);
 
-
+  useEffect(() => {
+    if(error)
+      dispatch(clearError());
+  }, []);
+  
+  useEffect(() => {
+    if(loggedIn)
+      history.replace('/profile');
+  }, [loggedIn]);
+  
   return(
     <Container maxWidth='sm'>
       {

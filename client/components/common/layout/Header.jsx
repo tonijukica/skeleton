@@ -4,6 +4,9 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { logoutUser } from '../../../store/actions/userActions';
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -21,9 +24,14 @@ const useStyles = makeStyles((theme) => ({
 const Header = () => {
   const classes = useStyles();
   const history = useHistory();
+  const dispatch = useDispatch();
+  const { username } = useSelector(state => state.user);
 
-  const handleLoginClick = () => {
+  const handleLoginRedirect = () => {
     history.push('/login');
+  }
+  const handleLogout = () => {
+    dispatch(logoutUser());
   }
   return (
     <div className={classes.root}>
@@ -32,7 +40,15 @@ const Header = () => {
           <Typography variant="h6" className={classes.title}>
             App
           </Typography>
-          <Button color="inherit" onClick = {handleLoginClick}>Login</Button>
+          {
+            username ? 
+              <>
+                <Button color="inherit" onClick = {() => history.push('/profile')}>{username}</Button>
+                <Button color="inherit" onClick = {handleLogout}>Logout</Button>
+              </>
+            :
+            <Button color="inherit" onClick = {handleLoginRedirect}>Login</Button>
+          }
         </Toolbar>
       </AppBar>
     </div>

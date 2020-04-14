@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Container, Paper, Avatar, TextField, Button, Typography, makeStyles } from '@material-ui/core';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import { useDispatch, useSelector } from 'react-redux';
-import { registerUser } from '../../../store/actions/userActions';
+import { registerUser, clearError } from '../../../store/actions/userActions';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -24,11 +25,22 @@ const useStyles = makeStyles((theme) => ({
 const Register = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const history = useHistory();
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { error, errorMsg } = useSelector(state => state.user);
+  const { loggedIn, error, errorMsg } = useSelector(state => state.user);
 
+  useEffect(() => {
+    if(error)
+      dispatch(clearError());
+  }, []);
+
+  useEffect(() => {
+    if(loggedIn)
+      history.replace('/profile');
+  }, [loggedIn]);
+  
   return(
     <Container maxWidth='sm'>
       {

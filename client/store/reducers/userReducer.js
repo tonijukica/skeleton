@@ -33,6 +33,7 @@ export const userReducer = (state = userInitialState, action) => {
     case(actionTypes.SET_ERROR):
       return {
         ...state,
+        isLoading: false,
         error: true,
         errorMsg: action.payload
       }
