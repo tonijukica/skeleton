@@ -62,7 +62,11 @@ router.use('/profile', async(req, res) => {
       id
     }
   });
-  return res.json(user);
+  return res.json({
+    username: user.username,
+    email: user.email,
+    createdAt: user.createdAt
+  });
 
 })
 

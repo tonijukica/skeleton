@@ -28,7 +28,7 @@ const Login = () => {
   const dispatch = useDispatch();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const { loggedIn, error, errorMsg, isLoading } = useSelector(state => state.user);
+  const { loggedIn, error, errorMsg } = useSelector(state => state.user);
 
   useEffect(() => {
     if(error)
