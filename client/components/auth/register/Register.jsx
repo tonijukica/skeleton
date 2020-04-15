@@ -3,7 +3,7 @@ import { Container, Paper, Avatar, TextField, Button, Typography, makeStyles } f
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser, clearError } from '../../../store/actions/userActions';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -29,18 +29,24 @@ const Register = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { loggedIn, error, errorMsg } = useSelector(state => state.user);
+  const { loggedIn, error, errorMsg, redirect } = useSelector(state => state.user);
 
   useEffect(() => {
     if(error)
       dispatch(clearError());
   }, []);
-
   useEffect(() => {
     if(loggedIn)
       history.replace('/profile');
   }, [loggedIn]);
-  
+  useEffect(() => {
+    if(redirect){
+      dispatch(clearError());
+      history.push('/login');
+    }
+  }, [redirect])
+
+    
   return(
     <Container maxWidth='sm'>
       {
@@ -90,12 +96,13 @@ const Register = () => {
           color='primary'
           className={classes.submit}
           disabled={!username || !email || !password}
-          onClick={() => {
+          onClick={async () => {
             dispatch(registerUser({
               username,
               email,
               password
             }))
+    
           }}
         >
           Register

@@ -5,7 +5,8 @@ export const userInitialState = {
   loggedIn: false,
   isLoading: false,
   error: false,
-  errorMsg: ''
+  errorMsg: '',
+  redirect: false
 }
 
 export const userReducer = (state = userInitialState, action) => {
@@ -41,7 +42,13 @@ export const userReducer = (state = userInitialState, action) => {
       return {
         ...state,
         error: false,
-        errorMsg: ''
+        errorMsg: '',
+        redirect: false
+      }
+    case(actionTypes.REDIRECT):
+      return {
+        ...state,
+        redirect: true
       }
     default:
       return state;

@@ -2,6 +2,7 @@ const express = require('express');
 const { User } = require('../db');
 const router = express.Router();
 const { hashPassword } = require('../common/helpers');
+const Joi = require('@hapi/joi');
 
 router.use('/register', async(req, res) => {
   const { username, email, password } = req.body;
@@ -15,13 +16,24 @@ router.use('/register', async(req, res) => {
   });
   if(user)
     return res.status(400).send('Username already exists');
-  
-  const newUser = await User.create({
-    username,
-    email,
-    passwordHash: await hashPassword(password)
-  });
-  return res.json(newUser);
+  try{
+    const registrationSchema = Joi.object({
+      username: Joi.string().min(3).max(30).required(), 
+      email: Joi.string().email().required(),
+      password: Joi.string().min(5).max(30)
+    });
+    const user = await registrationSchema.validateAsync({username, email, password});
+    const newUser = await User.create({
+      username: user.username,
+      email: user.email,
+      passwordHash: await hashPassword(user.password)
+    });
+    return res.json(newUser);
+  }
+ catch(err){
+   console.log(err);
+   return res.status(400).send(err.message);
+ }
 });
 
 router.use('/login', async(req, res) => {

@@ -6,6 +6,7 @@ const actionTypes = {
   LOADING_USER: 'LOADING_USER',
   SET_ERROR: 'SET_ERROR',
   CLEAR_ERROR: 'CLEAR_ERROR',
+  REDIRECT: 'REDIRECT'
 }
 
 function setUser(user) {
@@ -25,7 +26,6 @@ const clearError = () => {
 }
 
 const registerUser = (user) => {
-
   return dispatch => {
     axios.post('api/register', {
       username: user.username,
@@ -33,6 +33,7 @@ const registerUser = (user) => {
       password: user.password
     })
     .then((response) => {
+      dispatch({ type: actionTypes.REDIRECT });
     })
     .catch((err) => {
       dispatch({ type: actionTypes.SET_ERROR, payload: err.response.data});
