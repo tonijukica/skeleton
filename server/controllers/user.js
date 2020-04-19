@@ -4,7 +4,7 @@ const router = express.Router();
 const { hashPassword } = require('../common/helpers');
 const Joi = require('@hapi/joi');
 
-router.use('/register', async(req, res) => {
+router.post('/register', async(req, res) => {
   const { username, email, password } = req.body;
   if(!username && !email && password)
     return res.status(400).send('Missing required params');
@@ -36,7 +36,7 @@ router.use('/register', async(req, res) => {
  }
 });
 
-router.use('/login', async(req, res) => {
+router.post('/login', async(req, res) => {
   const { username, password } = req.body;
   if(!username && password)
     return res.status(400).send('Missing required params');
@@ -62,9 +62,14 @@ router.use('/login', async(req, res) => {
   }
   else
     return res.status(400).send('Incorrect username or password');
-  
 });
-router.use('/profile', async(req, res) => {
+
+router.post('/logout', (req, res) => {
+  req.session = null; 
+  return res.end();
+});
+
+router.get('/profile', async(req, res) => {
   if(!req.session.user)
     return res.status(400).send('Denied');
 

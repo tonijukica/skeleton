@@ -60,7 +60,12 @@ const loginUser = (user) => {
   }
 }
 const logoutUser = () => {
-  return dispatch => dispatch({ type: actionTypes.REMOVE_USER });
+  return dispatch => {
+    axios.post('api/logout')
+    .then(() => {
+      dispatch({ type: actionTypes.REMOVE_USER });
+    })
+  }
 }
 
 export {
