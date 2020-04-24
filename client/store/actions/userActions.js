@@ -27,7 +27,7 @@ const clearError = () => {
 
 const registerUser = (user) => {
   return dispatch => {
-    axios.post('api/register', {
+    return axios.post('api/register', {
       username: user.username,
       email: user.email,
       password: user.password
@@ -44,7 +44,7 @@ const registerUser = (user) => {
 const loginUser = (user) => {
   return dispatch => {
     dispatch(setLoading());
-    axios.post('/api/login', {
+    return axios.post('/api/login', {
       username: user.username,
       password: user.password
     })
@@ -61,7 +61,7 @@ const loginUser = (user) => {
 }
 const logoutUser = () => {
   return dispatch => {
-    axios.post('api/logout')
+    return axios.post('api/logout')
     .then(() => {
       dispatch({ type: actionTypes.REMOVE_USER });
     })

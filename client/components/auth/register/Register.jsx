@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Container, Paper, Avatar, TextField, Button, Typography, makeStyles } from '@material-ui/core';
+import { Container, Collapse, Paper, Avatar, TextField, Button, Typography, makeStyles } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser, clearError } from '../../../store/actions/userActions';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -39,22 +40,14 @@ const Register = () => {
     if(loggedIn)
       history.replace('/profile');
   }, [loggedIn]);
-  useEffect(() => {
-    if(redirect){
-      dispatch(clearError());
-      history.push('/login');
-    }
-  }, [redirect])
-
     
   return(
     <Container maxWidth='sm'>
-      {
-        error &&
-        <Paper variant='elevation' elevation={3} className={classes.paper} style={{backgroundColor: '#FF9494'}}>
-        {errorMsg}
-        </Paper>
-      }
+      <Collapse in={error}>
+          <Alert severity="error" onClose={() => {dispatch(clearError())}}>
+            {errorMsg}
+          </Alert>
+      </Collapse>
       <Paper variant='elevation' elevation={3} className={classes.paper}>
         <Avatar className={classes.avatar}>
           <VpnKeyIcon/>
@@ -101,7 +94,10 @@ const Register = () => {
               username,
               email,
               password
-            }))
+            })).then(() => {
+              dispatch(clearError());
+              history.push('/login');
+            })
     
           }}
         >

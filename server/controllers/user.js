@@ -2,7 +2,7 @@ const express = require('express');
 const { User } = require('../db');
 const router = express.Router();
 const { hashPassword } = require('../common/helpers');
-const Joi = require('@hapi/joi');
+const schema = require('../common/registrationSchema');
 
 router.post('/register', async(req, res) => {
   const { username, email, password } = req.body;
@@ -17,12 +17,7 @@ router.post('/register', async(req, res) => {
   if(user)
     return res.status(400).send('Username already exists');
   try{
-    const registrationSchema = Joi.object({
-      username: Joi.string().min(3).max(30).required(), 
-      email: Joi.string().email().required(),
-      password: Joi.string().min(5).max(30)
-    });
-    const user = await registrationSchema.validateAsync({username, email, password});
+    const user = await schema.validateAsync({username, email, password});
     const newUser = await User.create({
       username: user.username,
       email: user.email,
@@ -31,7 +26,6 @@ router.post('/register', async(req, res) => {
     return res.json(newUser);
   }
  catch(err){
-   console.log(err);
    return res.status(400).send(err.message);
  }
 });
@@ -71,7 +65,7 @@ router.post('/logout', (req, res) => {
 
 router.get('/profile', async(req, res) => {
   if(!req.session.user)
-    return res.status(400).send('Denied');
+    return res.status(401).send('Denied');
 
   const { id } = req.session.user;
   const user = await User.findOne({

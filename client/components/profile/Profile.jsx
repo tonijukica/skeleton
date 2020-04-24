@@ -52,28 +52,29 @@ const Profile = () => {
         <Typography component='h1' variant='h4'>
           Profile
         </Typography>
-        {loading && <CircularProgress color='primary' size='100px'/>}
-        {!loading && 
+        {loading ? 
+          <CircularProgress color='primary' size='100px'/>
+          :
           <>
-            <Typography component='h1' variant='h6'>
-              Username
-            </Typography>
-            <Typography variant='body1'>
-              {data.username}
-            </Typography>
-            <Typography component='h1' variant='h6'>
-              Email
-            </Typography>
-            <Typography variant='body1'>
-              {data.email}
-            </Typography>
-            <Typography component='h1' variant='h6'>
-              Registration date
-            </Typography>
-            <Typography variant='body1'>
-              {format(new Date(data.createdAt), 'dd/MM/yyyy')}
-            </Typography>
-          </>
+          <Typography component='h1' variant='h6'>
+            Username
+          </Typography>
+          <Typography variant='body1'>
+            {data.username}
+          </Typography>
+          <Typography component='h1' variant='h6'>
+            Email
+          </Typography>
+          <Typography variant='body1'>
+            {data.email}
+          </Typography>
+          <Typography component='h1' variant='h6'>
+            Registration date
+          </Typography>
+          <Typography variant='body1'>
+            {format(new Date(data.createdAt), 'dd/MM/yyyy')}
+          </Typography>
+        </>
         }
       </Paper>
     </Container>

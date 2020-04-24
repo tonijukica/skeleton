@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Container, Paper, Avatar, TextField, Button, Typography, makeStyles } from '@material-ui/core';
+import { Container, Collapse, Paper, Avatar, TextField, Button, Typography, makeStyles } from '@material-ui/core';
+import { Alert } from '@material-ui/lab'
 import LockIcon from '@material-ui/icons/LockOutlined';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,7 +8,7 @@ import { loginUser, clearError } from '../../../store/actions/userActions';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: '32px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -42,12 +43,11 @@ const Login = () => {
   
   return(
     <Container maxWidth='sm'>
-      {
-        error &&
-        <Paper variant='elevation' elevation={3} className={classes.paper} style={{backgroundColor: '#FF9494'}}>
-        {errorMsg}
-        </Paper>
-      }
+        <Collapse in={error}>
+          <Alert severity="error" onClose={() => {dispatch(clearError())}}>
+            {errorMsg}
+          </Alert>
+        </Collapse>
       <Paper variant='elevation' elevation={3} className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockIcon/>
@@ -84,7 +84,10 @@ const Login = () => {
             dispatch(loginUser({
               username,
               password
-            }))
+            })).then(() => {
+              dispatch(clearError());
+              history.push('/login');
+            })
           }}
         >
           Log in
