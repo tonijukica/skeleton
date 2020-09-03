@@ -4,7 +4,7 @@
 - Redux and React router
 - Material UI
 - Cookie session
-- Sequelize
+- Sequelize ORM
 
 ## Setup
 - Clone this repo `git clone https://github.com/tonijukica/skeleton-react.git`
